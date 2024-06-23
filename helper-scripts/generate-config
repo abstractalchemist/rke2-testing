@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mkdir -p /etc/rancher/rke2/
+
+if [[ $1 == "server" ]]; then
+cat <<EOF > /etc/rancher/rke2/config.yaml
+write-kubeconfig-mode: "0644"
+server: https://$1:9345
+token: $2
+EOF
+else
+cat <<EOF > /etc/rancher/rke2/config.yaml
+token: $2
+server: https://$1:9345
+fi
