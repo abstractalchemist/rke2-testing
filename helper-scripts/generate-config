@@ -3,13 +3,33 @@
 mkdir -p /etc/rancher/rke2/
 
 if [[ $1 == "server" ]]; then
+if [[ $4 ]]; then
 cat <<EOF > /etc/rancher/rke2/config.yaml
 write-kubeconfig-mode: "0644"
-server: https://$1:9345
-token: $2
+token: $3
+node-taint:
+- CriticalAddonsOnly=true:NoExecute
+node-label:
+- category=control-plane
+tls-san:
+- $2
 EOF
 else
 cat <<EOF > /etc/rancher/rke2/config.yaml
-token: $2
-server: https://$1:9345
+write-kubeconfig-mode: "0644"
+server: https://$2:9345
+token: $3
+node-taint:
+- CriticalAddonsOnly=true:NoExecute
+node-label:
+- category=control-plane
+tls-san:
+- $2
+EOF
+fi
+else
+cat <<EOF > /etc/rancher/rke2/config.yaml
+token: $3
+server: https://$2:9345
+EOF
 fi
